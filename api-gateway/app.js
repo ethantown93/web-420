@@ -10,16 +10,23 @@
 const header = require("../header.js");
 console.log(header.display("Ethan", "Townsend", "api-gateway"));
 
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require("mongoose");
-const indexRouter = require('./routes/index');
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
+const index = require('./routes/index');
 const apiCatalog = require('./routes/api-catalog');
 
 // establishing connection to MongoDB
+
+mongoose.connect('mongodb+srv://admin:admin@ems-rfwnt.mongodb.net/test?retryWrites=true', {
+  promiseLibrary: require('bluebird')
+}).then ( () => console.log('connection successful')).catch( (err) => console.error(err));
+
 const mongoDB = "mongodb+srv://admin:admin@ems-rfwnt.mongodb.net/test?retryWrites=true";
 
 const app = express();
@@ -28,6 +35,8 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 app.use('/api', apiCatalog);
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,28 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-
-
-/*
- *CONECTING TO mongoDB
- */
-mongoose.connect(mongoDB, {
-  useMongoClient: true
-});
-
-mongoose.Promise = global.Promise;
-
-var db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "MongoDB connected error: "));
-
-db.once("open", function() {
-  console.log("Application connected to mLab MongoDB instance");
-});
-
-
-
+app.use('/', index);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
