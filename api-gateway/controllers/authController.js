@@ -7,12 +7,15 @@
 ;===========================================
 */
 
-const User = require('../models/user');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const config = require('../config');
+var User = require('../models/user');
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+var config = require('../config');
 
-// Register a new user
+
+
+
+// Register a new user on POST
 exports.user_register = function(req, res) {
 
     var hashedPassword = bcrypt.hashSync(req.body.password, 8);
@@ -35,8 +38,7 @@ exports.user_register = function(req, res) {
     });
 };
 
-
-// Verify token 
+// Verify token on GET
 exports.user_token = function(req, res) {
 
     var token = req.headers['x-access-token'];

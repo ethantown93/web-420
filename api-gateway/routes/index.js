@@ -1,5 +1,15 @@
-var express = require('express');
-var router = express.Router();
+/*
+============================================
+; Title:  app.js
+; Author: Ethan Townsend
+; Date:   5/5/2019
+; Description: web-420
+;===========================================
+*/
+
+
+const express = require('express');
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
